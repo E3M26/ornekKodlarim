@@ -22,8 +22,8 @@ void loop()
     inB[1] = inB[0];
     Serial.readBytes(inB,1);
 
-    msj1 = ((String)inB[3]+(String)inB[2]+(String)inB[1]);
-    msj2 = ((String)inB[2]+(String)inB[1]+(String)inB[0]);
+    msj1 = ((String)inB[3]+(String)inB[2]+(String)inB[1]); //abcd --> abc
+    msj2 = ((String)inB[2]+(String)inB[1]+(String)inB[0]);  //abcd --> bcd
 
     if(msj1 =="<0>" || msj1 =="<8>") 
     { key=1; 
@@ -49,13 +49,19 @@ void loop()
     { msj1="";
       sonuc+=msj2;
       msj2="";
+
+      if(sonuc == "<7>" || sonuc == "<A>") {sonuc="";}
+
       Serial.print("---> ");
       Serial.println(sonuc);
-      sonM[4] = sonM[3];
-      sonM[3] = sonM[2];
-      sonM[2] = sonM[1];
-      sonM[1] = sonM[0]; 
-      sonM[0] = sonuc;
+       
+      if(sonuc != "") 
+      { sonM[4] = sonM[3];
+        sonM[3] = sonM[2];
+        sonM[2] = sonM[1];
+        sonM[1] = sonM[0];
+        sonM[0] = sonuc;
+      }
       sonuc="";
       key=3;
     }
@@ -82,6 +88,6 @@ void loop()
       sonM[0]="";
 
       return;
-    }    
+    }
   }
 }
