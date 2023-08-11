@@ -1,0 +1,87 @@
+String msj1,msj2,sonuc;
+char inB[10];
+int key;
+String sonM[10];
+
+void setup() 
+{
+  Serial.begin(115200);
+  msj1="";
+  msj2="";
+  sonuc="";
+  key=0;
+}
+
+void loop() 
+{
+
+  if(Serial.available()>0)
+  {
+    inB[3] = inB[2];
+    inB[2] = inB[1];
+    inB[1] = inB[0];
+    Serial.readBytes(inB,1);
+
+    msj1 = ((String)inB[3]+(String)inB[2]+(String)inB[1]);
+    msj2 = ((String)inB[2]+(String)inB[1]+(String)inB[0]);
+
+    if(msj1 =="<0>" || msj1 =="<8>") 
+    { key=1; 
+      Serial.println();
+      Serial.println(msj1); sonuc="";
+    }
+    
+    if(msj2 =="<7>" || msj2 =="<A>") 
+    {
+      key=2; Serial.println(msj2);
+    }
+
+    if(inB[0] == 10)//line feed "\n"  
+    {
+      key=4;  Serial.println("----mesaj sonu----");
+    }
+
+    if(key == 1)    
+    { 
+      sonuc+=inB[3];
+    }
+    if(key == 2)    
+    { msj1="";
+      sonuc+=msj2;
+      msj2="";
+      Serial.print("---> ");
+      Serial.println(sonuc);
+      sonM[4] = sonM[3];
+      sonM[3] = sonM[2];
+      sonM[2] = sonM[1];
+      sonM[1] = sonM[0]; 
+      sonM[0] = sonuc;
+      sonuc="";
+      key=3;
+    }
+    if(key==3)  
+    {
+      //Serial.print(".");
+    }
+    if(key==4)
+    {
+      Serial.println();
+      Serial.println("******************");
+      Serial.println(sonM[4]);
+      Serial.println(sonM[3]);
+      Serial.println(sonM[2]);
+      Serial.println(sonM[1]);
+      Serial.println(sonM[0]);
+      Serial.println("******************");
+      
+      key=0;
+      sonM[4]="";
+      sonM[3]="";
+      sonM[2]="";
+      sonM[1]="";
+      sonM[0]="";
+
+      return;
+    }    
+  }
+}
